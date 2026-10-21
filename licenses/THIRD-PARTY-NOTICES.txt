@@ -1,0 +1,16 @@
+THIRD-PARTY NOTICES
+
+This deployment is intended to contain two separately licensed components.
+
+1. FREEDOOM
+Freedoom game data is free/open content under the Freedoom project's modified
+BSD / 3-clause BSD licensing terms. See the official Freedoom repository and
+the license/credits files installed by scripts/setup_assets.sh.
+
+2. CHOCOLATE DOOM / WEBASSEMBLY PORT
+The browser engine is based on Chocolate Doom and the published WebAssembly
+port used by the setup script. The engine is GPL-2.0-or-later/GPLv2 depending
+on the corresponding source distribution. The setup script downloads the
+published browser artifacts and records their source URL.
+
+Do not add proprietary Doom IWADs to this project.

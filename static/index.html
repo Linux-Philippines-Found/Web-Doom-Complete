@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#070707">
+<meta name="description" content="Freedoom Web — classic free/open FPS in your browser">
+<link rel="manifest" href="https://cvasnet.dpdns.org/Apps/fd-assets/manifest.webmanifest">
+<title>FREEDOOM WEB</title>
+<link rel="icon" href="https://cvasnet.dpdns.org/Apps/fd-assets/favicon.ico" sizes="32x32" type="image/x-icon">
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#050505;color:#eee;font-family:Arial,Helvetica,sans-serif}
+button{font:inherit}
+#site{width:100%;height:100%;position:relative}
+.top{height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;background:linear-gradient(#151515,#080808);border-bottom:2px solid #3a3a3a}
+.brand{font-size:clamp(22px,4vw,38px);font-weight:1000;letter-spacing:2px;color:#e01919;text-shadow:3px 3px #430000}
+.tag{font-size:11px;letter-spacing:2px;color:#999}
+#home{position:absolute;inset:64px 0 0;display:flex;align-items:center;justify-content:center;padding:18px;overflow:auto;background:radial-gradient(circle at 50% 40%,#242424 0,#090909 48%,#000 100%)}
+.panel{width:min(900px,96vw);padding:clamp(22px,5vw,54px);border:1px solid #454545;background:linear-gradient(145deg,#181818ee,#080808f5);box-shadow:0 25px 100px #000,0 0 0 5px #101010}
+.kicker{text-align:center;color:#aaa;letter-spacing:6px;font-size:12px}
+.hero{text-align:center;font-size:clamp(50px,11vw,112px);line-height:.82;font-weight:1000;color:#e7e7e7;text-shadow:7px 7px #740000;margin:12px 0}
+.sub{text-align:center;color:#aaa;letter-spacing:4px;font-weight:700;margin-bottom:28px}
+.games{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.game{min-height:135px;padding:18px;border:1px solid #555;background:linear-gradient(#191919,#0d0d0d);color:#eee;text-align:left;cursor:pointer}
+.game:hover,.game:focus{border-color:#e52323;background:linear-gradient(#331010,#100909);transform:translateY(-2px)}
+.game strong{display:block;font-size:20px;margin-bottom:8px}.game span{font-size:12px;color:#aaa;line-height:1.45}
+.actions{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:18px}
+.action{padding:11px 18px;border:1px solid #4c4c4c;background:#111;color:#ddd;cursor:pointer}
+.action:hover{background:#760d0d;border-color:#e33;color:white}
+.note{text-align:center;margin-top:22px;color:#777;font-size:11px;line-height:1.5}
+#game{position:absolute;inset:64px 0 0;display:none;background:#000;align-items:center;justify-content:center}
+#canvas{display:block;width:100%;height:100%;object-fit:contain;image-rendering:pixelated;outline:none;background:#000}
+#boot{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#000;text-align:center;padding:20px;z-index:10}
+#boot.hidden{display:none}.bootTitle{font-size:34px;font-weight:1000;color:#d91919;letter-spacing:4px;text-shadow:4px 4px #430000}
+#bootMsg{margin-top:10px;color:#aaa;font-size:13px}
+#bootLog{margin-top:18px;width:min(650px,92vw);max-height:25vh;overflow:auto;background:#080808;border:1px solid #282828;padding:10px;text-align:left;font:11px monospace;color:#8eb58e}
+#bootStart{margin-top:18px;padding:13px 30px;background:#a40e0e;border:1px solid #e33;color:#fff;font-weight:900;letter-spacing:2px;cursor:pointer}
+#bootStart:disabled{opacity:.45;cursor:wait}
+#hud{position:absolute;top:10px;right:10px;z-index:20;display:flex;gap:5px}.hudbtn{padding:8px 10px;border:1px solid #555;background:#000b;color:#ddd}
+#touch{display:none;position:absolute;inset:0;z-index:15;pointer-events:none}.tbtn{position:absolute;pointer-events:auto;width:62px;height:62px;border-radius:50%;border:2px solid #aaa;background:#161616b8;color:#fff;font-weight:bold}
+#tl{left:15px;bottom:105px}#tr{left:153px;bottom:105px}#tu{left:84px;bottom:173px}#td{left:84px;bottom:35px}
+#fire{right:18px;bottom:45px;width:88px;height:88px;background:#720b0bcc}#use{right:118px;bottom:130px}
+.dialog{position:absolute;inset:0;z-index:50;display:none;align-items:center;justify-content:center;padding:20px;background:#000d}
+.dialogBox{width:min(600px,94vw);max-height:82vh;overflow:auto;background:#111;border:1px solid #555;box-shadow:0 20px 80px #000;padding:26px}
+.dialogBox h2{margin-top:0;color:#e22}.dialogBox p{line-height:1.5;color:#ccc}.dialogActions{display:flex;justify-content:flex-end;gap:8px;margin-top:20px}
+@media(max-width:700px){.tag{display:none}.games{grid-template-columns:1fr}.game{min-height:95px}.panel{padding:25px 18px}.hero{font-size:58px}#touch.enabled{display:block}}
+</style>
+</head>
+<body>
+<div id="site">
+<header class="top"><div class="brand">FREEDOOM WEB</div><div class="tag">CLASSIC FPS • BROWSER EDITION</div></header>
+
+<section id="home">
+  <div class="panel">
+    <div class="kicker">A FREE &amp; OPEN CLASSIC FPS EXPERIENCE</div>
+    <div class="hero">FREEDOOM</div>
+    <div class="sub">PLAY DIRECTLY IN YOUR BROWSER</div>
+
+    <div class="games">
+      <button class="game" onclick="chooseGame('freedoom1.wad')"><strong>PHASE 1</strong><span>Classic campaign compatible with the Doom / Ultimate Doom family of content.</span></button>
+      <button class="game" onclick="chooseGame('freedoom2.wad')"><strong>PHASE 2</strong><span>A longer campaign with the expanded Freedoom monster and weapon set.</span></button>
+      <button class="game" onclick="chooseGame('freedm.wad')"><strong>FREEDM</strong><span>A monster-free deathmatch map set. This browser build launches it as a local game.</span></button>
+    </div>
+
+    <div class="actions">
+      <button class="action" onclick="showOptions()">OPTIONS</button>
+      <button class="action" onclick="showControls()">CONTROLS</button>
+      <button class="action" onclick="toggleFullscreen()">FULLSCREEN</button>
+      <button class="action" onclick="showAbout()">ABOUT</button>
+    </div>
+
+    <div class="note">Freedoom game data is free/open content. The browser engine is separately licensed under GPLv2.<br>No proprietary Doom IWADs are included.</div>
+  </div>
+</section>
+
+<section id="game">
+  <canvas id="canvas" tabindex="-1" oncontextmenu="event.preventDefault()"></canvas>
+  <div id="hud"><button class="hudbtn" onclick="toggleFullscreen()">⛶</button><button class="hudbtn" onclick="backHome()">MENU</button></div>
+
+  <div id="boot">
+    <div class="bootTitle">FREEDOOM</div>
+    <div id="bootMsg">Loading browser engine…</div>
+    <button id="bootStart" disabled>LOADING…</button>
+    <div id="bootLog"></div>
+  </div>
+
+  <div id="touch" class="toggles">
+    <button class="tbtn" id="tl">◀</button><button class="tbtn" id="tr">▶</button>
+    <button class="tbtn" id="tu">▲</button><button class="tbtn" id="td">▼</button>
+    <button class="tbtn" id="use">USE</button><button class="tbtn" id="fire">FIRE</button>
+  </div>
+</section>
+
+<div class="dialog" id="dialog"><div class="dialogBox" id="dialogBox"></div></div>
+</div>
+
+<script>
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+let selectedWad='freedoom1.wad', started=false, engineLoaded=false;
+let settings={touch:true};
+try{const x=JSON.parse(localStorage.getItem('freedoom-web-settings'));if(x)settings=Object.assign(settings,x)}catch(e){}
+
+function updateTouchUI(){
+  if(settings.touch && window.innerWidth<=700){
+    $('touch').classList.add('enabled');
+  }else{
+    $('touch').classList.remove('enabled');
+  }
+}
+window.addEventListener('resize', updateTouchUI);
+
+function log(m,cls){const d=document.createElement('div');d.textContent=m;if(cls)d.style.color='#ff8f8f';$('bootLog').appendChild(d);$('bootLog').scrollTop=$('bootLog').scrollHeight}
+function status(m){$('bootMsg').textContent=m;log(m)}
+window.addEventListener('error',e=>log('ERROR: '+e.message+' @'+e.lineno,'e'));
+window.addEventListener('unhandledrejection',e=>log('ERROR: '+(e.reason?.message||e.reason),'e'));
+
+function openDialog(html){$('dialogBox').innerHTML=html;$('dialog').style.display='flex'}
+window.closeDialog=()=>{$('dialog').style.display='none'};
+
+window.chooseGame=function(wad){
+ selectedWad=wad;
+ const name=wad.replace('.wad','').toUpperCase();
+ openDialog(`<h2>START ${name}</h2><p>The browser engine and game data will be loaded into your browser. The game then runs on your device.</p><div class="dialogActions"><button class="action" onclick="closeDialog()">CANCEL</button><button class="action" style="background:#7c0d0d" onclick="closeDialog();launch()">START GAME</button></div>`);
+};
+
+window.showAbout=function(){openDialog(`<h2>ABOUT FREEDOOM WEB</h2><p>Freedoom Web combines the Freedoom free/open game data with a Chocolate Doom WebAssembly engine.</p><p>The engine and game data are separate projects with separate licenses. Their notices and credits are included with this distribution.</p><p>This site does not contain id Software's proprietary Doom IWADs.</p><div class="dialogActions"><button class="action" onclick="closeDialog()">CLOSE</button></div>`)};
+window.showControls=function(){openDialog(`<h2>CONTROLS</h2><p><b>Move:</b> Arrow Up/Down &nbsp; <b>Turn:</b> Left/Right &nbsp; <b>Fire:</b> Ctrl &nbsp; <b>Use:</b> Space</p><p><b>Strafe:</b> Q/E &nbsp; <b>Run:</b> Shift &nbsp; <b>Weapons:</b> 1–7 &nbsp; <b>Menu:</b> Esc</p><p>Touch controls appear on supported mobile devices.</p><div class="dialogActions"><button class="action" onclick="closeDialog()">CLOSE</button></div>`)};
+window.showOptions=function(){openDialog(`<h2>OPTIONS</h2><p><label><input id="touchOpt" type="checkbox" ${settings.touch?'checked':''}> Enable touch controls</label></p><p>Settings are saved only in this browser.</p><div class="dialogActions"><button class="action" onclick="closeDialog()">CANCEL</button><button class="action" style="background:#7c0d0d" onclick="settings.touch=$('touchOpt').checked;localStorage.setItem('freedoom-web-settings',JSON.stringify(settings));updateTouchUI();closeDialog()">SAVE</button></div>`)};
+window.toggleFullscreen=function(){if(document.fullscreenElement)document.exitFullscreen?.();else document.documentElement.requestFullscreen?.()};
+window.backHome=function(){location.reload()};
+
+const KEYS={
+ ArrowUp:{key:'ArrowUp',code:'ArrowUp',keyCode:38},ArrowDown:{key:'ArrowDown',code:'ArrowDown',keyCode:40},
+ ArrowLeft:{key:'ArrowLeft',code:'ArrowLeft',keyCode:37},ArrowRight:{key:'ArrowRight',code:'ArrowRight',keyCode:39},
+ Control:{key:'Control',code:'ControlLeft',keyCode:17},Space:{key:' ',code:'Space',keyCode:32},
+ Shift:{key:'Shift',code:'ShiftLeft',keyCode:16},Escape:{key:'Escape',code:'Escape',keyCode:27},
+ Enter:{key:'Enter',code:'Enter',keyCode:13},KeyQ:{key:'q',code:'KeyQ',keyCode:81},KeyE:{key:'e',code:'KeyE',keyCode:69},
+ Digit1:{key:'1',code:'Digit1',keyCode:49},Digit2:{key:'2',code:'Digit2',keyCode:50},Digit3:{key:'3',code:'Digit3',keyCode:51},
+ Digit4:{key:'4',code:'Digit4',keyCode:52},Digit5:{key:'5',code:'Digit5',keyCode:53},Digit6:{key:'6',code:'Digit6',keyCode:54},Digit7:{key:'7',code:'Digit7',keyCode:55}
+};
+function send(type,name){const k=KEYS[name];if(!k)return;const ev=new KeyboardEvent(type,{key:k.key,code:k.code,keyCode:k.keyCode,which:k.keyCode,bubbles:true,cancelable:true});try{Object.defineProperty(ev,'keyCode',{get:()=>k.keyCode});Object.defineProperty(ev,'which',{get:()=>k.keyCode})}catch(e){}document.dispatchEvent(ev);$('canvas').dispatchEvent(ev)}
+function hold(id,name){
+ let down=false,el=$(id);
+ const press=e=>{e.preventDefault();if(down)return;down=true;el.style.background='#a20d0dcc';send('keydown',name)};
+ const release=e=>{if(e?.preventDefault)e.preventDefault();if(!down)return;down=false;el.style.background='';send('keyup',name)};
+ ['touchstart','mousedown'].forEach(x=>el.addEventListener(x,press,{passive:false}));
+ ['touchend','touchcancel','mouseup','mouseleave'].forEach(x=>el.addEventListener(x,release,{passive:false}));
+}
+hold('tl','ArrowLeft');hold('tr','ArrowRight');hold('tu','ArrowUp');hold('td','ArrowDown');hold('use','Space');hold('fire','Control');
+
+window.launch=async function(){
+ if(started)return;
+ started=true;
+ updateTouchUI();
+ $('home').style.display='none';$('game').style.display='flex';$('boot').classList.remove('hidden');
+ status('Fetching files from server…');
+ try{
+   const baseUrl = 'https://cvasnet.dpdns.org/Apps/fd-assets/';
+   
+   const [wadRes, cfgRes, wasmRes] = await Promise.all([
+     fetch(baseUrl + selectedWad),
+     fetch(baseUrl + 'default.cfg'),
+     fetch(baseUrl + 'websockets-doom.wasm', {method: 'HEAD'})
+   ]);
+
+   if(!wadRes.ok) throw new Error(selectedWad + ' could not be fetched from ' + baseUrl);
+   if(!cfgRes.ok) throw new Error('default.cfg could not be fetched from ' + baseUrl);
+   if(!wasmRes.ok) throw new Error('WebAssembly engine is missing on the server.');
+
+   const wadBuffer = new Uint8Array(await wadRes.arrayBuffer());
+   const cfgBuffer = new Uint8Array(await cfgRes.arrayBuffer());
+
+   status('Preparing Emscripten runtime…');
+
+   window.Module={
+     canvas:$('canvas'),
+     noInitialRun:true,
+     noExitRuntime:true,
+     print:t=>log(String(t)),
+     printErr:t=>log(String(t),'e'),
+     setStatus:t=>{if(t)log('[engine] '+t)},
+     monitorRunDependencies:left=>{log('[dependencies] '+left+' remaining')},
+     preRun:function(){
+       try{window.Module.FS.mkdir('/savefiles')}catch(e){}
+       log('[fs] Writing ' + selectedWad);
+       window.Module.FS.writeFile('/' + selectedWad, wadBuffer);
+       log('[fs] Writing default.cfg');
+       window.Module.FS.writeFile('/default.cfg', cfgBuffer);
+     },
+     onRuntimeInitialized:function(){
+       engineLoaded=true;
+       log('[runtime] initialized');
+       $('bootStart').disabled=false;
+       $('bootStart').textContent='PLAY NOW';
+       status('Engine ready');
+     },
+     onExit:status=>log('[exit] '+status,'e')
+   };
+
+   const s=document.createElement('script');
+   s.src=baseUrl + 'websockets-doom.js';
+   s.onload=()=>status('Engine script loaded');
+   s.onerror=()=>{throw new Error('Could not load websockets-doom.js')};
+   document.body.appendChild(s);
+ }catch(e){
+   started=false;$('home').style.display='flex';$('game').style.display='none';
+   openDialog(`<h2>GAME COULD NOT START</h2><p>${String(e.message||e)}</p><div class="dialogActions"><button class="action" onclick="closeDialog()">CLOSE</button></div>`);
+ }
+};
+
+$('bootStart').onclick=function(){
+ if(!engineLoaded)return;
+ $('bootStart').disabled=true;$('bootStart').textContent='STARTING…';$('canvas').focus();
+ const args=['-iwad',selectedWad,'-window','-nogui','-nomusic','-config','default.cfg','-savedir','/savefiles'];
+ try{
+   window.callMain(args);
+   $('boot').classList.add('hidden');
+ }catch(e){
+   log('[main] '+(e?.message||e),'e');
+   $('bootStart').disabled=false;$('bootStart').textContent='RETRY';
+ }
+};
+
+if('serviceWorker' in navigator)navigator.serviceWorker.register('https://cvasnet.dpdns.org/Apps/fd-assets/sw.js').catch(()=>{});
+})();
+</script>
+</body>
+</html>

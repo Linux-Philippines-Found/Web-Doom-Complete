@@ -1,0 +1,9 @@
+{
+  "name": "Freedoom Web",
+  "short_name": "Freedoom",
+  "start_url": "/",
+  "display": "fullscreen",
+  "background_color": "#000000",
+  "theme_color": "#111111",
+  "description": "Self-hosted Freedoom browser game"
+}
